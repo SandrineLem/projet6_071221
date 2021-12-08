@@ -2,7 +2,16 @@
 const express = require('express');
 //creer l'appli Express 
 const app = express();
+//importer Mongoose --
+const mongoose = require('mongoose');
 
+
+//connect Mongoose --
+mongoose.connect('mongodb+srv://sand:abcde@cluster0.9rb3f.mongodb.net/testretryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 //-----Middleware (fonction)----
 app.use((req, res, next)=>{
     console.log('Requête recue!');
