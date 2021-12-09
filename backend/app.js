@@ -1,3 +1,8 @@
+/*--m'informer des erreurs 
+var error = new Error("The error message");
+error.http_code = 404;
+console.log(error);*/
+
 //importer express
 const express = require('express');
 //creer l'appli Express 
@@ -7,10 +12,9 @@ app.use(express.json());
 
 //importer Mongoose --
 const mongoose = require('mongoose');
-
+const sauceRoutes = require('./routes/Sauce');
 //importer les routes pour les utilisateurs
 const userRoutes = require('./routes/user');
-
 
 //connect Mongoose --
 mongoose.connect('mongodb+srv://sand:abcde@cluster0.9rb3f.mongodb.net/testretryWrites=true&w=majority',
@@ -26,40 +30,10 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
-app.post('/api/sauces', (req, res, next)=>{
-  //enlever le id du champ de la requête
-  delete req.body._Id;
-  const sauce = new Sauce({
-    ...req.body
-  });
-  //enregistrer l'objet ds la base de donnée methode save()
-  sauce.save()
-  //reponse 201 good creation 
-  .then(()=> res.status(201).json({message: 'Objet enregistré !'}))
-  //renvoie 400 pour error
-  .catch(error => res.status(400).json({ error }));
-});
-app.get('/api/sauces', (req, res, next)=>{
-   Sauce.find()
-   
-});
-//modification du code de la reponse status 
-app.use((req, res, next)=>{
-    res.status(201);
-    next();
-});
-//methode app.use (creer une route reponse avec un type de requete  )
-app.use((req, res, next)=>{
-    res.json({message: 'votre requête à bien été recue!'});
-    next();
-});
-app.use ((req, res)=>{
-    console.log('La réponse à été envoyée avec succès !');
-});
 
+//importation des routers qui contiennent les routes 
+app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
-//--fin Middleware--
-
 
 //exporter l'appli
 module.exports = app;

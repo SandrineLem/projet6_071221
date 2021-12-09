@@ -2,17 +2,17 @@
 const mongoose = require('mongoose');
 //--creer un shema de donnée sauces
 const sauceSchema = mongoose.Schema({
-    userId:{type: string, required: true},
-    name:{type: string, required: true },
-    manufacturer:{type: string, required: true },
-    description:{type: string, required: true },
-    mainPepper:{type: string, required: true },
-    imageUrl:{type: string, required: true },
+    userId:{type: String, required: true},
+    name:{type: String, required: true },
+    manufacturer:{type: String, required: true },
+    description:{type: String, required: true },
+    mainPepper:{type: String, required: true },
+    imageUrl:{type: String, required: true },
     heat:{type: Number, required: true },
     likes:{type: Number, required: true },
     dislikes:{type: Number, required: true },
-    usersLiked:{type: ["string<userId>"], required: true },
-    usersDisliked:{type: ["string<userId>"], required: true },
+    usersLiked:{type: ["String<userId>".likes], required: true },
+    usersDisliked:{type: ["String<userId>".dislikes], required: true }
 });
 //exporter le model methode exports
 module.exports = mongoose.model('Sauce', sauceSchema);
