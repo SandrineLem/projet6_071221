@@ -4,8 +4,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //--recuperer le model User
 const User = require('../models/User');
+
+
 //--preparation de nouveaux utilisateurs
-//--fonction signup
+//--fonction signup ---Enregistrement de nx utilisateur 
 exports.signup = (req, res, next)=>{
     //hacher le mdp methode hash()
     bcrypt.hash(req.body.password, 10)
@@ -21,8 +23,11 @@ exports.signup = (req, res, next)=>{
             .then(() => res.status(201).json({message: 'Utilisateur créé !' }))
             .catch(error => res.status(400).json({ error }));
     })
+    //renvoie code (500) erreur serveur
     .catch(error => res.status(500).json({ error }));
 };
+
+
 //--Fonction login pour connecter les utilisateurs existant
 exports.login = (req, res, next) =>{
     //--utiliser la methode findOne pour chercher l'utilisateur
@@ -51,6 +56,11 @@ exports.login = (req, res, next) =>{
                     { expiresIn: '24h' }
                    )
                 });
+                req.session.token = newToken;
+                res.status(200).json({
+                    userId: user._id,
+                    token: newToken
+                })
             })    
             .catch(error => res.status(500).json({ error }));
     })

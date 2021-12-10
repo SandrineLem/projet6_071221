@@ -1,6 +1,6 @@
 //creation du programme qui va ecouter et repondre 
 const http = require('http');
-const { type } = require('os');
+
 //importer le fichier app.js 
 const app = require('./app');
 //--fonction qui renvoie un port valide ( en numero/chaine ) 

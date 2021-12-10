@@ -5,13 +5,17 @@ console.log(error);*/
 
 //importer express
 const express = require('express');
+const bodyParser = require('body-parser');
 //creer l'appli Express 
 const app = express();
+//importer Mongoose --
+const mongoose = require('mongoose');
+//donner accès au chemin du syteme de fichier
+const path = require('path');
 //pour avoir acces au cors de la requête (intercept ttes les requête qui ont contenttypejson)
 app.use(express.json());
 
-//importer Mongoose --
-const mongoose = require('mongoose');
+
 const sauceRoutes = require('./routes/Sauce');
 //importer les routes pour les utilisateurs
 const userRoutes = require('./routes/user');
@@ -31,6 +35,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// Parse le body des requêtes en json
+app.use(bodyParser.json());
+//importer l'acces au syteme du fichier image 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 //importation des routers qui contiennent les routes 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
