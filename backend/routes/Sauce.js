@@ -1,3 +1,8 @@
+ 
+var error = new Error("The error message");
+error.http_code = 404;
+console.log(error);
+
 const express = require('express');
 const router = express.Router();
 
@@ -21,5 +26,7 @@ router.post('/', auth, multer, sauceCtrl.createSauce);
 router.put('/:id', auth, multer, sauceCtrl.modifySauce);
 //route pour supprimer une sauce 
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
+//route pour ( like / Dislike ) avis aime ou aime pas la sauce 
+router.post('/:id/like', auth, sauceCtrl.likeSauce);
 
 module.exports = router;

@@ -76,6 +76,56 @@ exports.createSauce = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
   };
+
+  //-----------Liker une sauce 
+
+  exports.likeSauce = (req, res, next) => {
+    const userId = req.body.userId;
+    const sauceId = req.params.id;
+    const like = req.body.like;
+    Sauce.findOne({ _Id: sauceId})
+      .then(sauce => {
+        const avisSauce = {
+          usersLiked : sauce.userLiked,
+          usersDisliked : sauce.usersDisliked,
+          likes : 0,
+          dislikes : 0
+        }
+        switch (avis) {
+          // Ajout d' avis like (aime)
+          case 1: 
+            avisSauce.usersLiked.push(userId);
+            break;
+          // Ajout d' avis Dislike (aime pas )
+          case -1:
+            avisSauce.usersDisliked.push(userId);
+          // Aucun des deux ni like ni dislike 
+          case 0 :
+          // si pas de like (aime)
+            if (avisSauce.usersLiked.includes(userId)){
+              const index = avisSauce.usersLiked.indexOf(userId);
+              //suppression du like 
+              avisSauce.usersLiked.splice(index, 1);
+            }else{
+            //si pas de dislike (aime pas)
+              const index = avisSauce.usersDisliked.indexOf(userId);
+              //suppression du dislike
+              avisSauce.usersDisliked.splice(index, 1);
+            }
+             break;   
+        };
+        //Afficher le nombre total de like (aime) et de Dislike (aime pas)
+        // Afficher Nbre de like 
+        avisSauce.likes = avisSauce.usersLiked.length;
+        // Afficher Nbre de like
+        avisSauce.dislikes = avisSauce.usersDisliked.length;
+        //sauvegarder l'avisSauce dans la Sauce
+        Sauce.updateOne({ _id: sauceId}, avisSauce)
+        .then(() => res.status(200).json ({ message: 'La Sauce a bien été notée!'}))
+        .catch(error => res.status(400).json({ error }))
+      })
+      .catch(error => res.status(500).json ({ error}));
+  };
   
 
   
