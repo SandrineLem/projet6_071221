@@ -16,7 +16,7 @@ router.get('/', auth, multer, sauceCtrl.getAllSauces);
 //renvoyer l'identifiant dans url 
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 //recuperer les information de la sauce 
-router.post('/', auth, sauceCtrl.createSauce);
+router.post('/', auth, multer, sauceCtrl.createSauce);
 //route put pour modifier une sauce 
 router.put('/:id', auth, multer, sauceCtrl.modifySauce);
 //route pour supprimer une sauce 
