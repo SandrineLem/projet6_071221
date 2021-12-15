@@ -14,14 +14,16 @@ const mongoose = require('mongoose');
 const path = require('path');
 //pour avoir acces au cors de la requête (intercept ttes les requête qui ont contenttypejson)
 app.use(express.json());
-
-
+//ajout d'helmet pour la securité des entête HTTP connexion securisé 
+const helmet = require("helmet");
+app.use(helmet());
 const sauceRoutes = require('./routes/Sauce');
 //importer les routes pour les utilisateurs
 const userRoutes = require('./routes/user');
 
-//connect Mongoose --
-mongoose.connect('mongodb+srv://sand:abcde@cluster0.9rb3f.mongodb.net/testretryWrites=true&w=majority',
+//connect Mongoose 
+//mongose secret --
+mongoose.connect(process.env.mongoose_secret,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))

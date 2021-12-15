@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //--recuperer le model User
 const User = require('../models/User');
-
+require('dotenv').config();
 
 //--preparation de nouveaux utilisateurs
 //--fonction signup ---Enregistrement de nx utilisateur 
@@ -51,7 +51,8 @@ exports.login = (req, res, next) =>{
                    token: jwt.sign(
                     //données que l'on souhaite encoder 
                     { userId: user._id },
-                    'RANDOM_TOKEN_SECRET',
+                    //ajout du secret token via dotenv
+                    process.env.secret_token,
                     //expiration
                     { expiresIn: '24h' }
                    )
