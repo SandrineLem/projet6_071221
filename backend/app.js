@@ -1,7 +1,7 @@
-/*--m'informer des erreurs 
+/*--m'informer des erreurs*/ 
 var error = new Error("The error message");
 error.http_code = 404;
-console.log(error);*/
+console.log(error);
 
 //importer express
 const express = require('express');

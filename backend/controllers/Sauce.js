@@ -80,51 +80,47 @@ exports.createSauce = (req, res, next) => {
   //-----------Liker une sauce 
 
   exports.likeSauce = (req, res, next) => {
-    const userId = req.body.userId;
-    const sauceId = req.params.id;
-    const like = req.body.like;
-    Sauce.findOne({ _Id: sauceId})
-      .then(sauce => {
-        const avisSauce = {
-          usersLiked : sauce.userLiked,
-          usersDisliked : sauce.usersDisliked,
-          likes : 0,
-          dislikes : 0
-        }
-        switch (avis) {
-          // Ajout d' avis like (aime)
-          case 1: 
-            avisSauce.usersLiked.push(userId);
-            break;
-          // Ajout d' avis Dislike (aime pas )
-          case -1:
-            avisSauce.usersDisliked.push(userId);
-          // Aucun des deux ni like ni dislike 
-          case 0 :
-          // si pas de like (aime)
-            if (avisSauce.usersLiked.includes(userId)){
-              const index = avisSauce.usersLiked.indexOf(userId);
-              //suppression du like 
-              avisSauce.usersLiked.splice(index, 1);
-            }else{
-            //si pas de dislike (aime pas)
-              const index = avisSauce.usersDisliked.indexOf(userId);
-              //suppression du dislike
-              avisSauce.usersDisliked.splice(index, 1);
+    let userId = req.body.userId
+    let sauceId = req.params.id
+    let like = req.body.like
+    
+    switch (like){
+      case 1 :
+        //Utilisation de updateOne pour mettre a jour la sauce avec le (like) 
+        //Utilisation methode $push pour ajouter une condition userlike avec id et  $inc pour incrementer de +1
+          Sauce.updateOne({ _id: sauceId}, {$push: { usersLiked : userId}, $inc: { likes: +1}})
+          .then(() => res.status(200).json({ message: `Votre "j'aime" a bien été ajouté !`}))
+          .catch((error) => res.status(400).json ({ error }))
+
+          break;
+      case -1 : 
+        // Reprise des meme methode pour le j'aime pas (Dislike)
+          Sauce.updateOne({ _id: sauceId},{$push: {usersDisliked: userId}, $inc: {dislikes: +1}})
+          .then(() => { res.status(200).json({ message: `Votre "j'aime pas" a bien été ajouté !`})})
+          .catch((error) => res.status(400).jspn ( { error }))
+
+          break;
+      case 0 : 
+      // Pour annuler un like ou dislike 
+        Sauce.findOne({ _id: sauceId})
+          .then((sauce) =>{
+            //condition si meme user id dans le tableau des likes 
+            if (sauce.usersLiked.includes(userId)){
+              //methode $pull pour ajouter une condition negative pour le like 
+              Sauce.updateOne({ _id: sauceId}, {$pull: { usersLiked: userId}, $inc: { likes: -1}})
+              .then(() => { res.status(200).json({ message: `Avis (like) déjà prit en compte !`})})
+              .catch((error) => res.status(400).jspn ( { error }))
             }
-             break;   
-        };
-        //Afficher le nombre total de like (aime) et de Dislike (aime pas)
-        // Afficher Nbre de like 
-        avisSauce.likes = avisSauce.usersLiked.length;
-        // Afficher Nbre de like
-        avisSauce.dislikes = avisSauce.usersDisliked.length;
-        //sauvegarder l'avisSauce dans la Sauce
-        Sauce.updateOne({ _id: sauceId}, avisSauce)
-        .then(() => res.status(200).json ({ message: 'La Sauce a bien été notée!'}))
-        .catch(error => res.status(400).json({ error }))
-      })
-      .catch(error => res.status(500).json ({ error}));
+            if (sauce.usersDisliked.includes(userId)){
+              //methode $pull pour ajouter une condition negative pour le like 
+              Sauce.updateOne({ _id: sauceId}, {$pull: { usersDisliked: userId}, $inc: { Dislikes: -1}})
+              .then(() => { res.status(200).json({ message: `Avis (Dislike) déjà prit en compte !`})})
+              .catch((error) => res.status(400).jspn ( { error }))
+            }
+          })
+          .catch((error) => res.status(404).json({ error }))
+            break;
+    }
   };
   
 
