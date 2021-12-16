@@ -57,11 +57,11 @@ exports.login = (req, res, next) =>{
                     { expiresIn: '24h' }
                    )
                 });
-                req.session.token = newToken;
+                /*/req.session.token = newToken;
                 res.status(200).json({
                     userId: user._id,
                     token: newToken
-                })
+                })*/
             })    
             .catch(error => res.status(500).json({ error }));
     })
