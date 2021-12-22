@@ -8,7 +8,8 @@ console.log(error);*/
 
 //configuration multer pour les affichages images 
 const multer = require('multer');
-
+const fs = require('fs');
+const dir = "./images"
 const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/jpeg':'jpg',
@@ -21,9 +22,13 @@ const storage = multer.diskStorage({
     },
     //expliquer quel nom de fichier utiliser 
     filename: (req, file, callback)=>{
-        const name = file.originalname.split(' ').join('_');
-        const extension = MIME_TYPES[file.mimetype];
-        callback(null, name + Date.now() + '.' + extension);
+        //si on ne trouve de dossier images
+        if(!fs.existsSync(dir)){
+            fs.mkdirSync(dir)    
+        }
+            const name = file.originalname.split(' ').join('_');
+            const extension = MIME_TYPES[file.mimetype];
+            callback(null, name + Date.now() + '.' + extension);
     }
 });
 //exporter le fichier unique d'image 
