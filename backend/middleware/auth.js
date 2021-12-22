@@ -7,8 +7,8 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
        
         //decoder le token utilisation du package jsonwebtoken + fonction verifier
-        //Verifier le token + la clef secrete 
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+        //Verifier le token + la clef secrete avec dot env 
+        const decodedToken = jwt.verify(token, process.env.secret_token);
         //extraire la verif si elle echoue 
         const userId = decodedToken.userId;
         //attribué la valeur de la variable ( userid ) à la clé userId objet
