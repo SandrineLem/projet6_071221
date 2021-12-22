@@ -8,8 +8,9 @@ console.log(error);*/
 
 //configuration multer pour les affichages images 
 const multer = require('multer');
+//importer fs
 const fs = require('fs');
-const dir = "./images"
+const dir = "./images";
 const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/jpeg':'jpg',
@@ -24,6 +25,7 @@ const storage = multer.diskStorage({
     filename: (req, file, callback)=>{
         //si on ne trouve de dossier images
         if(!fs.existsSync(dir)){
+            //créer le dossier images
             fs.mkdirSync(dir)    
         }
             const name = file.originalname.split(' ').join('_');
